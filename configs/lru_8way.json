@@ -1,0 +1,3 @@
+{
+  "LLC": { "sets": 4096, "ways": 8, "replacement": "lru" }
+}
