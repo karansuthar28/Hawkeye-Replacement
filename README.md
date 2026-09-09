@@ -87,3 +87,4 @@ ChampSim measures the IPC (Instruction Per Cycle) value as a performance metric.
 There are some other useful metrics printed out at the end of simulation. <br>
 
 Good luck and be a champion! <br>
+# Hawkeye-Replacement-Policy
