@@ -3,6 +3,7 @@
 #include <vector>
 #include <utility>
 #include <cstdint>
+
 int main() {
   OPTgen opt(/*num_sets=*/1, /*associativity=*/2);
   // TEST_VECTOR_START
