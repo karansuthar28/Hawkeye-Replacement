@@ -21,7 +21,7 @@ private:
     {
         std::deque<std::size_t> occVector; // Occupancy values for the accesses currently inside the 8W history.
         std::deque<uint64_t> accessHistory; // Address corresponding to each entry in occVector.
-        std::unordered_map<uint64_t, uint64_t> lastAccess; // address -> most recent set-local access time
+        std::unordered_map<uint64_t, uint64_t> prevAccess; // address -> most recent set-local access time
         uint64_t time = 0; // Number of accesses seen by this set.
     };
 

@@ -37,9 +37,9 @@ bool OPTgen::access(std::size_t set_idx, uint64_t address)
         currentTime - static_cast<uint64_t>(cacheSet.occVector.size());
 
 
-    auto previous = cacheSet.lastAccess.find(address);
+    auto previous = cacheSet.prevAccess.find(address);
 
-    if (previous != cacheSet.lastAccess.end())
+    if (previous != cacheSet.prevAccess.end())
     {
         uint64_t previousTime = previous->second;
 
