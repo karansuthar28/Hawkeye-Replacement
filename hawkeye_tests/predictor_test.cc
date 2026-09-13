@@ -3,8 +3,10 @@
 #include <vector>
 #include <utility>
 #include <cstdint>
+
 int main() {
   HawkeyePredictor pred;
+
   // TEST_VECTOR_START
   // train_events: ordered (pc, opt_hit) pairs applied via pred.train(pc, opt_hit)
   std::vector<std::pair<uint64_t, bool>> train_events = {
@@ -13,6 +15,7 @@ int main() {
   std::vector<uint64_t> query_pcs = {
   };
   // TEST_VECTOR_END
+  
   for (auto& [pc, opt_hit] : train_events) {
     pred.train(pc, opt_hit);
   }
