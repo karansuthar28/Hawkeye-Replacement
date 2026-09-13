@@ -15,7 +15,6 @@ OPTgen::OPTgen(std::size_t num_sets, std::size_t associativity, std::size_t hist
         throw std::invalid_argument("OPTgen: history_multiplier must be positive");
 }
 
-
 bool OPTgen::access(std::size_t set_idx, uint64_t address)
 {
     if (set_idx >= totalSets.size())
