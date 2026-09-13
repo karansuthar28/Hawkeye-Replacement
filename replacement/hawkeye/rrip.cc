@@ -35,7 +35,7 @@ std::size_t find_victim(std::vector<int>& rrpv)
 
   while(1) {
     for (std::size_t way = 0; way < rrpv.size(); ++way) 
-      if (rrpv[way] >= maxRRPV) return way;
+      if (rrpv[way] == maxRRPV) return way;
 
     for (int& value : rrpv)
       value++;

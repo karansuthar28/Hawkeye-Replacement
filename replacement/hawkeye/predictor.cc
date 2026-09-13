@@ -18,17 +18,7 @@ HawkeyePredictor::HawkeyePredictor(std::size_t num_entries, int counter_bits): m
 
 std::size_t HawkeyePredictor::pcIndex(uint64_t pc) const
 {
-  uint64_t value = pc;
-
-  constexpr uint64_t crc = 0xEDB88320; // crc = crcPolynomial 
-
-  for (int bit = 0; bit < 32; ++bit)
-  {
-    if (value & 1) value = (value >> 1) ^ crc;
-    else value = value >> 1;
-  }
-
-  return static_cast<std::size_t>(value % ctrTable.size());
+  return static_cast<std::size_t>((pc ^ (pc >> 12)) & (ctrTable.size()-1));
 }
 
 
