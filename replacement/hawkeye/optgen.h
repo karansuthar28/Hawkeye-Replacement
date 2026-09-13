@@ -3,37 +3,31 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <deque>
 #include <unordered_map>
 #include <vector>
 
-class OPTgen 
+class OPTgen
 {
-  public:
-  // num_sets: number of cache sets tracked independently
-  // associativity: W, the cache associativity (occupancy vector cap)
-  // history_multiplier: length of tracked history, in units of the set's
-  // capacity (paper uses 8x; see Figure 2).
-  OPTgen(std::size_t num_sets, std::size_t associativity, std::size_t history_multiplier = 8);
+public:
+    OPTgen(std::size_t num_sets,
+           std::size_t associativity,
+           std::size_t history_multiplier = 8);
 
-  // Processes one access to `address`, mapped to set `set_idx`, per
-  bool access(std::size_t set_idx, uint64_t address);
+    bool access(std::size_t set_idx, uint64_t address);
 
-  private:
-  struct SetState 
-  {
-    explicit SetState(std::size_t history_length);
-    
-    std::vector<std::size_t> occupancy;
-    std::vector<uint64_t> slot_address;
-    std::vector<uint64_t> slot_timestamp;
-    std::vector<unsigned char> slot_valid;
-    std::unordered_map<uint64_t, uint64_t> last_access;
-    uint64_t time = 0;
-  };
-  
-  std::size_t associativity_;
-  std::size_t history_length_;
-  std::vector<SetState> sets_;
+private:
+    struct setInfo
+    {
+        std::deque<std::size_t> occVector; // Occupancy values for the accesses currently inside the 8W history.
+        std::deque<uint64_t> accessHistory; // Address corresponding to each entry in occVector.
+        std::unordered_map<uint64_t, uint64_t> lastAccess; // address -> most recent set-local access time
+        uint64_t time = 0; // Number of accesses seen by this set.
+    };
+
+    std::size_t associativity; // Let's say 16-way then W = 16
+    std::size_t historyLength; // 8W = 8x16 = 128
+    std::vector<setInfo> totalSets; // Number of cache lines/ways
 };
 
 #endif
