@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 // Exceptional Handling I am doing (Edge Cases)
-OPTgen::OPTgen(std::size_t num_sets, std::size_t associativity, std::size_t history_multiplier): associativity(associativity), historyLength(associativity * history_multiplier), totalSets(num_sets)
+OPTgen::OPTgen(std::size_t num_sets, std::size_t associativity, std::size_t history_multiplier): setAssociativity(associativity), historyLength(associativity * history_multiplier), totalSets(num_sets)
 {
     if (num_sets == 0)
         throw std::invalid_argument("OPTgen: num_sets must be positive");
@@ -41,7 +41,7 @@ bool OPTgen::access(std::size_t set_idx, uint64_t address)
         // Check the usage interval [prevTime, currTime).
         for (std::size_t i = startIndex; i < cacheSet.occVector.size(); ++i)
         {
-            if (cacheSet.occVector[i] >= associativity)
+            if (cacheSet.occVector[i] >= setAssociativity)
             {
                 flag = 1;
                 break;

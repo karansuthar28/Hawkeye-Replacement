@@ -25,9 +25,9 @@ private:
         uint64_t time = 0; // Number of accesses seen by this set.
     };
 
-    std::size_t associativity; // Let's say 16-way then W = 16
+    std::size_t setAssociativity; // Let's say 16-way then W = 16
     std::size_t historyLength; // 8W = 8x16 = 128
-    std::vector<setInfo> totalSets; // Number of cache lines/ways
+    std::vector<setInfo> totalSets; // OPTgen information for every cache set
 };
 
 #endif
