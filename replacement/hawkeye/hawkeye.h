@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <deque>
 #include <optional>
 #include <unordered_map>
 #include <vector>
@@ -13,55 +14,74 @@
 #include "predictor.h"
 #include "rrip.h"
 
-struct hawkeye : public champsim::modules::replacement {
+struct hawkeye : public champsim::modules::replacement
+{
   explicit hawkeye(CACHE* cache);
 
-  long find_victim(uint32_t triggering_cpu, uint64_t instr_id, long set,
-                   const champsim::cache_block* current_set,
-                   champsim::address ip, champsim::address full_addr,
-                   access_type type);
+  long find_victim(
+    uint32_t triggeringCpu,
+    uint64_t instrId,
+    long set,
+    const champsim::cache_block* currentSet,
+    champsim::address ip,
+    champsim::address fullAddr,
+    access_type type);
 
-  void replacement_cache_fill(uint32_t triggering_cpu, long set, long way,
-                              champsim::address full_addr,
-                              champsim::address ip,
-                              champsim::address victim_addr,
-                              access_type type);
+  void replacement_cache_fill(
+    uint32_t triggeringCpu,
+    long set,
+    long way,
+    champsim::address fullAddr,
+    champsim::address ip,
+    champsim::address victimAddr,
+    access_type type);
 
-  void update_replacement_state(uint32_t triggering_cpu, long set, long way,
-                                champsim::address full_addr,
-                                champsim::address ip,
-                                champsim::address victim_addr,
-                                access_type type, bool hit);
+  void update_replacement_state(
+    uint32_t triggeringCpu,
+    long set,
+    long way,
+    champsim::address fullAddr,
+    champsim::address ip,
+    champsim::address victimAddr,
+    access_type type,
+    bool hit);
 
-private:
-  struct PcRecord {
+  private:
+  struct PcRecord
+  {
     uint64_t timestamp = 0;
     uint64_t pc = 0;
   };
 
-  struct PcHistorySet {
-    explicit PcHistorySet(std::size_t history_length);
+  struct HistoryEntry
+  {
+    uint64_t address = 0;
+    uint64_t timestamp = 0;
+  };
 
-    std::vector<uint64_t> slot_address;
-    std::vector<uint64_t> slot_timestamp;
-    std::vector<unsigned char> slot_valid;
+  struct PcHistorySet
+  {
+    std::deque<HistoryEntry> history;
     std::unordered_map<uint64_t, PcRecord> last;
     uint64_t time = 0;
   };
 
-  std::optional<uint64_t> previous_pc_and_record(std::size_t set_idx,
-                                                  uint64_t address,
-                                                  uint64_t pc);
-  static Classification to_classification(bool cache_friendly);
+  std::optional<uint64_t> previousPcAndRecord(
+    std::size_t setIdx,
+    uint64_t address,
+    uint64_t pc);
 
-  std::size_t num_sets_;
-  std::size_t num_ways_;
-  std::size_t history_length_;
+  static Classification toClassification(bool cacheFriendly);
 
-  OPTgen optgen_;
-  HawkeyePredictor predictor_;
-  std::vector<std::vector<int>> rrpv_;
-  std::vector<PcHistorySet> pc_history_;
+  std::size_t numSets;
+  std::size_t numWays;
+  std::size_t historyLength;
+
+  OPTgen optgen;
+  HawkeyePredictor predictor;
+  
+  std::vector<std::vector<int>> rrpvTable;
+  std::vector<PcHistorySet> pcHistory;
 };
 
 #endif
