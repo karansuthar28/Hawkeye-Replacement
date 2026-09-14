@@ -16,60 +16,57 @@
 
 struct hawkeye : public champsim::modules::replacement
 {
-  explicit hawkeye(CACHE* cache);
+  explicit hawkeye(CACHE* cachePtr);
 
   long find_victim(
-    uint32_t triggeringCpu,
-    uint64_t instrId,
+    uint32_t trigger,
+    uint64_t instrnID,
     long set,
-    const champsim::cache_block* currentSet,
-    champsim::address ip,
+    const champsim::cache_block* currSet,
+    champsim::address instrnPtr,
     champsim::address fullAddr,
-    access_type type);
+    access_type t);
 
   void replacement_cache_fill(
-    uint32_t triggeringCpu,
+    uint32_t trigger,
     long set,
     long way,
     champsim::address fullAddr,
-    champsim::address ip,
+    champsim::address instrnPtr,
     champsim::address victimAddr,
-    access_type type);
+    access_type t);
 
   void update_replacement_state(
-    uint32_t triggeringCpu,
+    uint32_t trigger,
     long set,
     long way,
     champsim::address fullAddr,
-    champsim::address ip,
+    champsim::address instrnPtr,
     champsim::address victimAddr,
-    access_type type,
+    access_type t,
     bool hit);
 
   private:
-  struct PcRecord
+  struct pcRecord
   {
     uint64_t timestamp = 0;
     uint64_t pc = 0;
   };
 
-  struct HistoryEntry
+  struct historyEntry
   {
-    uint64_t address = 0;
+    uint64_t blockAddr = 0;
     uint64_t timestamp = 0;
   };
 
-  struct PcHistorySet
+  struct pcHistorySet
   {
-    std::deque<HistoryEntry> history;
-    std::unordered_map<uint64_t, PcRecord> last;
+    std::deque<historyEntry> history;
+    std::unordered_map<uint64_t, pcRecord> last;
     uint64_t time = 0;
   };
 
-  std::optional<uint64_t> previousPcAndRecord(
-    std::size_t setIdx,
-    uint64_t address,
-    uint64_t pc);
+  std::optional<uint64_t> prevPcAndRecord(std::size_t setIdx, uint64_t address, uint64_t pc);
 
   static Classification toClassification(bool cacheFriendly);
 
@@ -81,7 +78,7 @@ struct hawkeye : public champsim::modules::replacement
   HawkeyePredictor predictor;
   
   std::vector<std::vector<int>> rrpvTable;
-  std::vector<PcHistorySet> pcHistory;
+  std::vector<pcHistorySet> pcHistory;
 };
 
 #endif
